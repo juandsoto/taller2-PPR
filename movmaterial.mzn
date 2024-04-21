@@ -27,12 +27,17 @@ constraint forall(i in 1..n)(mov[i,i] = 0);
 
 %asegura que lo que estoy sacando de una bodega sea menor o igual a lo que habia inicialmente, sumandole y restandole lo que ya he metido o sacado de la misma.
 constraint forall(i,j in 1..n where i!=j)(
-  mov[i,j] <= elementos_en_bodega(i)
+  mov[i,j] <= elementos_en_bodega(i) 
 );
 
 %asegura que cada bodega contenga exactamente los elementos que se indican en la distribucion final 'o'
 constraint forall(i in 1..n)(
    elementos_en_bodega(i) = o[i]
+);
+
+%rompe simetrias, una vez se pasa material de la bodega i a la bodega j, no puede devolverse nada de la bodega j a la bodega i. No tendría sentido 
+constraint forall(i,j in 1..n where i!=j)(
+  mov[i,j] > 0 -> mov[j,i] = 0
 );
 
 var int: costo;
