@@ -1,0 +1,12 @@
+N = 5; % Cantidad de generadores en el mercado eléctrico.
+M = 4; % Número de unidades de tiempo en que está dividido el día.
+D = array1d(0..M-1, [100, 40, 20, 200]);  % Demanda de energía en KW de los consumidores en cada hora j.
+P = 35000; % Precio máximo de compra por KW.
+ % Capacidad de producción de energía en KW de cada generador i en cada hora j.
+C = array2d(0..M-1, 1..N, 
+     [20,50,40,15,40,
+      20,20,20,20,20,
+      10,30,80,10,40,
+      100,10,40,60,90]);
+      
+PV = [1000,35000,200,1200,500];  % Precio de venta de energía de cada generador i por KW.
