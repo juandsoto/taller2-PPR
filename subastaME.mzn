@@ -4,14 +4,12 @@ int: M; % número de unidades de tiempo en que está dividido el día.
 array[0..M-1] of int: D;  % arreglo que representa la demanda de energía en KW de los consumidores en cada hora j.
 int: P; % precio máximo de compra por KW.
 array[0..M-1, 1..N] of int: C; % matriz que representa la capacidad de producción de energía en KW de cada generador i en cada hora j.
-array[1..N] of int: PV;  % arreglo que representa el precio de venta de energía de cada generador i por KW.
+array[1..N] of int: PV;  % arreglo que representa el precio de venta de energía por KW de cada generador i.
 
 % Variables
 var int: PC; % precio de compra de la energía. 
 array[0..M-1, 1..N] of var int: V; % matriz que representa la cantidad de KW que debe comprarse a cada generador i en cada hora j.
-
-%Aux
-array[1..N] of var int: PVSelected;
+array[1..N] of var int: PVSelected; % arreglo que representa el precio de venta de energía por KW de cada generador i seleccionado.
 
 % Restricciones
 
@@ -73,31 +71,17 @@ constraint forall(i in 1..N)(
 );
 
 
-% Objetivo
+% Condición redundante
 constraint PC = max(PVSelected);
 
-solve :: int_search(V, smallest, indomain_min) minimize PC;
+% Objetivo
+solve :: int_search(V, anti_first_fail, indomain_min) minimize PC;
 
-output ["Número de generadores, N = \(N)\n"];
-output ["Precio máx. de compra por KW, P = \(P)\n"];
-output ["Número de unidades de tiempo de un día, M = \(M)\n"];
-output ["Demanda de energía por unidad de tiempo, D = \n"];
-output ["Hora | Cantidad KW" ];
-output ["\n"];
-output ["\(j)    " ++ "\(D[j])" ++ "\n" | j in 0..M-1];
-output ["Precios de venta por generador, PV = \n"];
-output ["Gen \(i) " | i in 1..N];
-output ["\n \(PV)\n"];
-output ["Precios de venta seleccionados = \(PVSelected)\n"];
-output ["Capacidad de producción de energía en KW de cada generador, C=\n"];
-output ["Hora | " ];
-output ["Gen \(i) " | i in 1..N];
-output ["\n"];
-output ["\(j)    " ++ "\([C[j,i] | i in 1..N])" ++ "\n" | j in 0..M-1];
-output ["Cantidad de KW que debe comprarse a cada generador, V =\n"];
+
+output ["V =\n"];
 output ["Hora | " ];
 output ["Gen \(i) " | i in 1..N];
 output ["\n"];
 output ["\(j)    " ++ "\([V[j,i] | i in 1..N])" ++ "\n" | j in 0..M-1];
-output ["Precio de compra (max(PV seleccionado)), PC = \(PC)\n"];
+output ["Precio de compra = \(PC)\n"];
         
